@@ -34,6 +34,7 @@ const close = () => {
   appserver.close();
 };
 
+// Exporthing for testing
 module.exports = {
   app: app,
   close: close
