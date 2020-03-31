@@ -3,15 +3,16 @@ class Pucharse {
   constructor() {
     this.price = 0;
     this.phones = [];
+    this.phoneLines = [];
   }
 
   addPhoneLine() {
     // TODO implement me
-    console.log('addPhoneLineMethod')
+    this.phoneLines.push(phoneLine)
   }
 
   deletePhoneLine() {
-    // TODO implemenet me
+    this.phoneLines.pop()
   }
 
   addPhone(id) {
@@ -28,6 +29,21 @@ class Pucharse {
     if (phoneId >= 0)
       this.phones.splice(phoneId, 1);
   }
+
+  cart() {
+    return [
+      ...this.phoneLines, ...this.phones
+    ]
+  }
+
+  totalPrice() {
+    let price = 0;
+    this.cart().map(item => {
+      price += item.price;
+    });
+
+    return price;
+  }
 }
 
 const Phones = [
@@ -37,6 +53,12 @@ const Phones = [
   { id: 'sony', name: 'Sony Experia 99', price: 900 },
   { id: 'huawei', name: 'Huawei 99', price: 900 }
 ]
+
+const phoneLine = {
+  id: 'phoneLine',
+  name: 'Phone Line',
+  price: 150
+};
 
 var internetConnection = false; //boolean, by default false --> checkbox not selected
 var phoneLines = 0; //int --> how many phone lines client want to buy; 0 by default
@@ -82,6 +104,6 @@ function buy() {
 let p = new Pucharse()
 p.addPhone('moto');
 p.addPhone('iphone');
-console.log(p.phones)
-p.removePhone('moto');
-console.log(p.phones)
+p.addPhoneLine();
+console.log(p.totalPrice())
+console.log(p.cart())
