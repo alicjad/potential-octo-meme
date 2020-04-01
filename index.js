@@ -15,6 +15,8 @@ app.use((req, _, next) => {
     purchase = new Purchase();
   }
 
+  console.log(req.method, path);
+
   next();
 });
 
@@ -26,19 +28,30 @@ app.get("/ping", (_, res) => {
   res.json({ status: "ok" });
 });
 
-app.post("/phoneline", (_, res) => {
-  purchase.addPhoneLine();
+app.post("/phoneline", oneOf([check("amount").isInt()]), (req, res) => {
+  try {
+    validationResult(req).throw();
+  } catch (err) {
+    res.status(400).json(err);
+  }
 
-  return res.status(201).json({
-    status: "Created"
-  });
-});
+  if (req.body.amount < 0) {
+    res.status(400).json({ message: "amount has to be a positive integr" });
+  }
 
-app.delete("/phoneline", (_, res) => {
-  purchase.deletePhoneLine();
+  if (req.body.amount < purchase.phoneLines.length) {
+    while (req.body.amount < purchase.phoneLines.length) {
+      purchase.deletePhoneLine();
+    }
+  } else {
+    while (req.body.amount > purchase.phoneLines.length) {
+      purchase.addPhoneLine();
+    }
+  }
 
   return res.status(200).json({
-    status: "Ok"
+    status: "Ok",
+    price: purchase.totalPrice()
   });
 });
 
@@ -49,10 +62,15 @@ app.post("/phone", oneOf([check("id").isString()]), (req, res) => {
     res.status(400).json(err);
   }
 
-  purchase.addPhone(req.body.id);
-  return res.status(201).json({
-    status: "created"
-  });
+  let phone = purchase.addPhone(req.body.id);
+
+  if (phone)
+    return res.status(201).json({
+      status: "Created",
+      price: purchase.totalPrice(),
+      phone: phone
+    });
+  return res.status(400).send();
 });
 
 app.delete("/phone", oneOf([check("id").isString()]), (req, res) => {
@@ -62,12 +80,35 @@ app.delete("/phone", oneOf([check("id").isString()]), (req, res) => {
     res.status(400).json(err);
   }
 
-  purchase.removePhone(req.body.id);
-  return res.send();
+  let phone = purchase.removePhone(req.body.id);
+  if (phone)
+    return res.status(200).json({
+      status: "Ok",
+      price: purchase.totalPrice(),
+      phone: phone
+    });
+  return res.status(400).send();
 });
 
-app.get("/cart", (_, res) => {
+app.route("/cart").all((_, res) => {
   return res.json(purchase.getTotalCartInfo());
+});
+
+app.post("/connection", (_, res) => {
+  purchase.addInternetConnection();
+  return res.status(201).json({
+    status: "Created",
+    price: purchase.totalPrice()
+  });
+});
+
+app.delete("/connection", (_, res) => {
+  purchase.removeInternetConnection();
+  return res.status(200).json({
+    status: "Created",
+    price: purchase.totalPrice(),
+    phones: purchase.phones
+  });
 });
 
 let appserver = app.listen(3000, err => {

@@ -10,7 +10,7 @@
             <label for="chkInternetConnection">Internet connection</label>
             <br>
             <label for="txtPhoneLines">Phone lines</label>
-            <input type="number" id="txtPhoneLines" value="0">
+            <input type="number" id="txtPhoneLines" value="0" min="0">
             <br>
             <label for="cmbCellPhones">Cell phones:</label>
             <br>
@@ -26,9 +26,9 @@
                         </select>
                     </td>
                     <td>
-                        <input type="button" value="&gt;">
+                        <input type="button" id="addPhones" value="&gt;">
                         <br>
-                        <input type="button" value="&lt;">
+                        <input type="button" id="removePhones" value="&lt;">
                     </td>
                     <td>
                         <select id="txtChosenCellPhones" size="5" style="width: 150px">
@@ -37,9 +37,9 @@
                 </tr>
             </table>
             <br>
-            Total price: 0 DKK
+            Total price: <span id="price">0</span> DKK
             <br>
-            <input type="submit" value="Buy">
+            <input type="submit" id="buyBtn" value="Buy">
         </div>
 
         <script src="script.js"></script>

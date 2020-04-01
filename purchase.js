@@ -41,7 +41,11 @@ class Pucharse {
     let phoneId = this.phones.findIndex(p => p.id === id);
 
     if (phoneId >= 0) {
-      return this.phones.splice(phoneId, 1);
+      let phones = this.phones.splice(phoneId, 1);
+
+      if (phones.length) {
+        return phones[0];
+      }
     }
 
     return null;
