@@ -25,4 +25,52 @@ describe("Ping", () => {
         });
     });
   });
+
+  describe("Add phone", () => {
+    it("should return 201 CREATED", done => {
+      chai
+        .request(app)
+        .post("/phone")
+        .send({ id: "iphone" })
+        .end((err, res) => {
+          expect(res.status).to.be.equal(201);
+          done();
+        });
+    });
+
+    it("should return a new price", done => {
+      chai
+        .request(app)
+        .get("/cart")
+        .end((err, res) => {
+          expect(res.status).to.be.equal(200);
+          expect(res.body.price).to.be.eq(6000);
+          done();
+        });
+    });
+  });
+
+  describe("Delete phone", () => {
+    it("should return 200 OK", done => {
+      chai
+        .request(app)
+        .delete("/phone")
+        .send({ id: "iphone" })
+        .end((err, res) => {
+          expect(res.status).to.be.equal(200);
+          done();
+        });
+    });
+
+    it("should return a new price", done => {
+      chai
+        .request(app)
+        .get("/cart")
+        .end((err, res) => {
+          expect(res.status).to.be.equal(200);
+          expect(res.body.price).to.be.eq(0);
+          done();
+        });
+    });
+  });
 });

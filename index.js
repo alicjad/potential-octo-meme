@@ -1,13 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const { check, oneOf, validationResult } = require("express-validator");
+
+const Purchase = require("./purchase");
 
 const app = express();
+
+let purchase = new Purchase();
 
 app.use((req, res, next) => {
   let path = req._parsedUrl.pathname;
 
   if (path === "/") {
-    // reset model here
+    purchase = new Purchase();
   }
 
   next();
@@ -19,6 +24,50 @@ app.use(bodyParser.json());
 app.get("/ping", (req, res) => {
   // endpoint for pinging
   res.json({ status: "ok" });
+});
+
+app.post("/phoneline", (req, res) => {
+  purchase.addPhoneLine();
+
+  return res.status(201).json({
+    status: "Created"
+  });
+});
+
+app.delete("/phoneline", (req, res) => {
+  purchase.deletePhoneLine();
+
+  return res.status(200).json({
+    status: "Ok"
+  });
+});
+
+app.post("/phone", oneOf([check("id").isString()]), (req, res) => {
+  try {
+    validationResult(req).throw();
+  } catch (err) {
+    res.status(400).json(err);
+  }
+
+  purchase.addPhone(req.body.id);
+  return res.status(201).json({
+    status: "created"
+  });
+});
+
+app.delete("/phone", oneOf([check("id").isString()]), (req, res) => {
+  try {
+    validationResult(req).throw();
+  } catch (err) {
+    res.status(400).json(err);
+  }
+
+  purchase.removePhone(req.body.id);
+  return res.send();
+});
+
+app.get("/cart", (req, res) => {
+  return res.json(purchase.getTotalCartInfo());
 });
 
 let appserver = app.listen(3000, err => {
