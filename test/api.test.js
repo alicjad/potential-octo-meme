@@ -83,6 +83,17 @@ describe("API", () => {
         });
     });
 
+    it("should not allow to add the same", done => {
+      chai
+        .request(app)
+        .post("/phone")
+        .send({ id: "iphone" })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
+
     it("should return a new price of 0", done => {
       chai
         .request(app)
