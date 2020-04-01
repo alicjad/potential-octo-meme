@@ -6,7 +6,7 @@ const { expect } = chai;
 
 chai.use(chaiHttp);
 
-describe("Ping", () => {
+describe("API", () => {
   after(done => {
     // close connections after testing
     close();
