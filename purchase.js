@@ -8,10 +8,12 @@ class Pucharse {
     this.internetConnection = false;
   }
 
-  //TODO - create "buy()"
-
   addInternetConnection() {
     this.internetConnection = true;
+  }
+
+  removeInternetConnection() {
+    this.internetConnection = false;
   }
 
   addPhoneLine() {
