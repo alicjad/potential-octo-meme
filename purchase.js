@@ -1,7 +1,7 @@
 const Items = require("./items.json");
 
 //class declaration
-class Pucharse {
+class Purchase {
   constructor() {
     this.phones = [];
     this.phoneLines = [];
@@ -79,4 +79,4 @@ class Pucharse {
   }
 }
 
-module.exports = Pucharse;
+module.exports = Purchase;
