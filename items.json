@@ -1,0 +1,14 @@
+{
+  "phones": [
+    { "id": "moto", "name": "Motorola G99", "price": 800 },
+    { "id": "iphone", "name": "iPhone 99", "price": 6000 },
+    { "id": "samsung", "name": "Samsung Galaxy 99", "price": 1000 },
+    { "id": "sony", "name": "Sony Experia 99", "price": 900 },
+    { "id": "huawei", "name": "Huawei 99", "price": 900 }
+  ],
+  "phoneLine": {
+    "id": "phoneLine",
+    "name": "Phone Line",
+    "price": 150
+  }
+}
