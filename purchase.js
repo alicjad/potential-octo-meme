@@ -17,7 +17,9 @@ class Purchase {
   }
 
   addPhoneLine() {
-    this.phoneLines.push(Items.phoneLine);
+    if (this.phoneLines.length < 8) {
+      this.phoneLines.push(Items.phoneLine);
+    }
 
     return this.phoneLines.length;
   }
@@ -47,7 +49,7 @@ class Purchase {
       }
     }
 
-    return null;
+    return undefined;
   }
 
   cart() {
