@@ -15,8 +15,6 @@ app.use((req, _, next) => {
     purchase = new Purchase();
   }
 
-  console.log(req.method, path);
-
   next();
 });
 
@@ -32,11 +30,13 @@ app.post("/phoneline", oneOf([check("amount").isInt()]), (req, res) => {
   try {
     validationResult(req).throw();
   } catch (err) {
-    res.status(400).json(err);
+    return res.status(400).json(err);
   }
 
-  if (req.body.amount < 0) {
-    res.status(400).json({ message: "amount has to be a positive integr" });
+  if (req.body.amount < 0 || req.body.amount > 8) {
+    return res
+      .status(400)
+      .json({ message: "amount has to be between 0 and 8" });
   }
 
   if (req.body.amount < purchase.phoneLines.length) {
@@ -59,7 +59,7 @@ app.post("/phone", oneOf([check("id").isString()]), (req, res) => {
   try {
     validationResult(req).throw();
   } catch (err) {
-    res.status(400).json(err);
+    return res.status(400).json(err);
   }
 
   let phone = purchase.addPhone(req.body.id);
@@ -77,7 +77,7 @@ app.delete("/phone", oneOf([check("id").isString()]), (req, res) => {
   try {
     validationResult(req).throw();
   } catch (err) {
-    res.status(400).json(err);
+    return res.status(400).json(err);
   }
 
   let phone = purchase.removePhone(req.body.id);
@@ -96,7 +96,7 @@ app.route("/cart").all((_, res) => {
 
 app.post("/connection", (_, res) => {
   purchase.addInternetConnection();
-  return res.status(201).json({
+  return res.status(200).json({
     status: "Created",
     price: purchase.totalPrice()
   });
