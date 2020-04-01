@@ -61,7 +61,7 @@ describe("Purchase tests", () => {
   describe("Phones", () => {
     let purchase;
 
-    before(done => {
+    beforeEach(done => {
       purchase = new Purchase();
       done();
     });
@@ -83,7 +83,7 @@ describe("Purchase tests", () => {
 
     it("Should remove a phone", done => {
       purchase.addPhone("moto");
-      expect(purchase.phoneLines).to.not.be.empty;
+      expect(purchase.phones).to.not.be.empty;
       purchase.removePhone("moto");
       expect(purchase.phones.length).to.be.equal(0);
       expect(purchase.totalPrice()).to.not.be.equal(800);
@@ -102,8 +102,8 @@ describe("Purchase tests", () => {
 
     it("Should reflect on the order and its price", done => {
       console.log(purchase.getTotalCartInfo());
-      expect(purchase.cart).to.not.be.empty;
-      expect(purchase.price).to.be.equal(200);
+      expect(purchase.cart()).to.not.be.empty;
+      expect(purchase.totalPrice()).to.be.equal(200);
       done();
     });
   });
