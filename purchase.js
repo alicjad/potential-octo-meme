@@ -1,7 +1,7 @@
 const Items = require("./items.json");
 
 //class declaration
-class Pucharse {
+class Purchase {
   constructor() {
     this.phones = [];
     this.phoneLines = [];
@@ -30,20 +30,23 @@ class Pucharse {
 
   addPhone(id) {
     let phone = Items.phones.find(p => p.id === id);
-    let exists = this.phones.findIndex(p => p.id === id) !== -1;
 
-    if (phone && !exists) {
+    if (phone) {
       this.phones.push(phone);
     }
 
-    return !exists ? phone : null;
+    return phone;
   }
 
   removePhone(id) {
     let phoneId = this.phones.findIndex(p => p.id === id);
 
     if (phoneId >= 0) {
-      return this.phones.splice(phoneId, 1);
+      let phones = this.phones.splice(phoneId, 1);
+
+      if (phones.length) {
+        return phones[0];
+      }
     }
 
     return null;
@@ -77,4 +80,4 @@ class Pucharse {
   }
 }
 
-module.exports = Pucharse;
+module.exports = Purchase;
