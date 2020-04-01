@@ -83,13 +83,15 @@ describe("API", () => {
         });
     });
 
-    it("should not allow to add the same", done => {
+    it("should allow to add the same", done => {
       chai
         .request(app)
         .post("/phone")
         .send({ id: "iphone" })
         .end((err, res) => {
-          expect(res).to.have.status(400);
+          expect(res).to.have.status(201);
+          expect(res.body.phone).to.be.not.null;
+          expect(res.body.price).to.be.equal(6000 * 2);
           done();
         });
     });
@@ -100,7 +102,7 @@ describe("API", () => {
         .get("/cart")
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.price).to.be.eq(6000);
+          expect(res.body.price).to.be.eq(12000);
           done();
         });
     });
@@ -116,13 +118,13 @@ describe("API", () => {
         });
     });
 
-    it("should return a new price of 0", done => {
+    it("should return a new price of only 6000", done => {
       chai
         .request(app)
         .get("/cart")
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.price).to.be.eq(0);
+          expect(res.body.price).to.be.eq(6000);
           done();
         });
     });

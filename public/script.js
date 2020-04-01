@@ -43,7 +43,6 @@ document.getElementById("addPhones").onclick = e => {
   var cellPhoneSelect = document.getElementById("txtCellPhones");
   var selectedPhones = document.getElementById("txtChosenCellPhones");
   var id = cellPhoneSelect.value;
-  var index = cellPhoneSelect.selectedIndex;
 
   fetch("/phone", {
     method: "POST",
@@ -60,7 +59,6 @@ document.getElementById("addPhones").onclick = e => {
           let option = document.createElement("option");
           option.value = data.phone.id;
           option.text = data.phone.name;
-          cellPhoneSelect.remove(index);
           selectedPhones.add(option);
           document.getElementById("price").textContent = data.price;
         });

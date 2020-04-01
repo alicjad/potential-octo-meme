@@ -28,13 +28,12 @@ class Purchase {
 
   addPhone(id) {
     let phone = Items.phones.find(p => p.id === id);
-    let exists = this.phones.findIndex(p => p.id === id) !== -1;
 
-    if (phone && !exists) {
+    if (phone) {
       this.phones.push(phone);
     }
 
-    return !exists ? phone : null;
+    return phone;
   }
 
   removePhone(id) {
