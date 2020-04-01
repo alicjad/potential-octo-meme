@@ -1,3 +1,5 @@
+const assert = require("assert");
+const given = require("mocha-testdata");
 const chai = require("chai");
 const Purchase = require("../purchase");
 
@@ -34,12 +36,12 @@ describe("Purchase tests", () => {
   describe("Phone lines", () => {
     let purchase;
 
-    before(done => {
+    beforeEach(done => {
       purchase = new Purchase();
       done();
     });
 
-    it("Should add a new new phone line", done => {
+    it("Should add a new phone line", done => {
       var currentLines = purchase.phoneLines.length;
       purchase.addPhoneLine();
       expect(purchase.phoneLines.length).to.be.not.equal(currentLines);
@@ -61,33 +63,89 @@ describe("Purchase tests", () => {
   describe("Phones", () => {
     let purchase;
 
-    beforeEach(done => {
+    given(
+      {
+        phonesToAdd: ["moto", "moto"],
+        phonesToRemove: [],
+        expectedPhoneNames: ["Motorola G99", "Motorola G99"],
+        expectedPrice: 1600,
+        expectedLength: 2
+      },
+      {
+        phonesToAdd: ["moto", "moto"],
+        phonesToRemove: ["moto"],
+        expectedPhoneNames: ["Motorola G99"],
+        expectedPrice: 800,
+        expectedLength: 1
+      },
+      {
+        phonesToAdd: ["moto"],
+        phonesToRemove: [],
+        expectedPhoneNames: ["Motorola G99"],
+        expectedPrice: 800,
+        expectedLength: 1
+      },
+      {
+        phonesToAdd: ["moto"],
+        phonesToRemove: ["moto"],
+        expectedPhoneNames: [],
+        expectedPrice: 0,
+        expectedLength: 0
+      },
+      {
+        phonesToAdd: ["moto"],
+        phonesToRemove: ["iphone"],
+        expectedPhoneNames: ["Motorola G99"],
+        expectedPrice: 800,
+        expectedLength: 1
+      },
+      {
+        phonesToAdd: [],
+        phonesToRemove: [],
+        expectedPhoneNames: [],
+        expectedPrice: 0,
+        expectedLength: 0
+      },
+      {
+        phonesToAdd: [],
+        phonesToRemove: ["iphone"],
+        expectedPhoneNames: [],
+        expectedPrice: 0,
+        expectedLength: 0
+      },
+      {
+        phonesToAdd: ["xyz"],
+        phonesToRemove: [],
+        expectedPhoneNames: [],
+        expectedPrice: 0,
+        expectedLength: 0
+      },
+      {
+        phonesToAdd: [],
+        phonesToRemove: ["xyz"],
+        expectedPhoneNames: [],
+        expectedPrice: 0,
+        expectedLength: 0
+      }
+    ).it("passes if total price matches", value => {
       purchase = new Purchase();
-      done();
-    });
-
-    it("Should add Motorola phone", done => {
-      purchase.addPhone("moto");
-      expect(purchase.phones[0].name).to.be.equal("Motorola G99");
-      expect(purchase.totalPrice() === 800).to.be.true;
-      done();
-    });
-
-    it("Should add two Motorola phones", done => {
-      purchase.addPhone("moto");
-      purchase.addPhone("moto");
-      expect(purchase.phones.length).to.be.equal(2);
-      expect(purchase.phones[1].name).to.be.equal("Motorola G99");
-      done();
-    });
-
-    it("Should remove a phone", done => {
-      purchase.addPhone("moto");
-      expect(purchase.phones).to.not.be.empty;
-      purchase.removePhone("moto");
-      expect(purchase.phones.length).to.be.equal(0);
-      expect(purchase.totalPrice()).to.not.be.equal(800);
-      done();
+      value.phonesToAdd.forEach(phone => {
+        purchase.addPhone(phone);
+      });
+      value.phonesToRemove.forEach(phone => {
+        purchase.removePhone(phone);
+      });
+      for (let index = 0; index < value.expectedPhoneNames.length; index++) {
+        expect(purchase.phones[index].name, "names").to.be.equal(
+          value.expectedPhoneNames[index]
+        );
+      }
+      expect(purchase.totalPrice(), "total price").to.be.equal(
+        value.expectedPrice
+      );
+      expect(purchase.phones.length, "length").to.be.equal(
+        value.expectedLength
+      );
     });
   });
 
