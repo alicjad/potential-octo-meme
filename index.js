@@ -8,7 +8,7 @@ const app = express();
 
 let purchase = new Purchase();
 
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   let path = req._parsedUrl.pathname;
 
   if (path === "/") {
@@ -21,12 +21,12 @@ app.use((req, res, next) => {
 app.use(express.static("public"));
 app.use(bodyParser.json());
 
-app.get("/ping", (req, res) => {
+app.get("/ping", (_, res) => {
   // endpoint for pinging
   res.json({ status: "ok" });
 });
 
-app.post("/phoneline", (req, res) => {
+app.post("/phoneline", (_, res) => {
   purchase.addPhoneLine();
 
   return res.status(201).json({
@@ -34,7 +34,7 @@ app.post("/phoneline", (req, res) => {
   });
 });
 
-app.delete("/phoneline", (req, res) => {
+app.delete("/phoneline", (_, res) => {
   purchase.deletePhoneLine();
 
   return res.status(200).json({
@@ -66,7 +66,7 @@ app.delete("/phone", oneOf([check("id").isString()]), (req, res) => {
   return res.send();
 });
 
-app.get("/cart", (req, res) => {
+app.get("/cart", (_, res) => {
   return res.json(purchase.getTotalCartInfo());
 });
 
