@@ -113,13 +113,17 @@ document.getElementById("buyBtn").onclick = e => {
       response.json().then(data => {
         var string = "";
 
-        data.cart.map(element => {
-          string += `\n${element.name} - ${element.price} DKK`;
-        });
+        if (data.price === 0) {
+          alert("Buy something first you moron!");
+        } else {
+          data.cart.map(element => {
+            string += `\n${element.name} - ${element.price} DKK`;
+          });
 
-        string += `\nTotal price: ${data.price} DKK`;
+          string += `\nTotal price: ${data.price} DKK`;
 
-        alert(string);
+          alert(string);
+        }
       });
     })
     .catch(err => {
