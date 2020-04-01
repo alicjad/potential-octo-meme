@@ -43,6 +43,13 @@ class Pucharse {
 
     return price;
   }
+
+  getTotalCartInfo() {
+    return {
+      cart: this.cart(),
+      price: this.totalPrice()
+    };
+  }
 }
 
 var internetConnection = false; //boolean, by default false --> checkbox not selected
