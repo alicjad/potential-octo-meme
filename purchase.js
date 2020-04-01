@@ -18,6 +18,7 @@ class Pucharse {
 
   addPhoneLine() {
     this.phoneLines.push(Items.phoneLine);
+
     return this.phoneLines.length;
   }
 
@@ -27,30 +28,38 @@ class Pucharse {
 
   addPhone(id) {
     let phone = Items.phones.find(p => p.id === id);
+    let exists = this.phones.findIndex(p => p.id === id) !== -1;
 
-    if (phone) {
+    if (phone && !exists) {
       this.phones.push(phone);
     }
-    return phone;
+
+    return !exists ? phone : null;
   }
 
   removePhone(id) {
     let phoneId = this.phones.findIndex(p => p.id === id);
 
-    if (phoneId >= 0) return this.phones.splice(phoneId, 1);
+    if (phoneId >= 0) {
+      return this.phones.splice(phoneId, 1);
+    }
+
     return null;
   }
 
   cart() {
     let cart = [...this.phoneLines, ...this.phones];
+
     if (this.internetConnection) {
       cart.push(Items.internetConnection);
     }
+
     return cart;
   }
 
   totalPrice() {
     let price = 0;
+
     this.cart().map(item => {
       price += item.price;
     });
