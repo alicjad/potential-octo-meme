@@ -83,6 +83,28 @@ describe("API", () => {
         });
     });
 
+    it("should return 400 BAD REQUEST with bad type", done => {
+      chai
+        .request(app)
+        .post("/phone")
+        .send({ id: "1" })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
+
+    it("should return 400 BAD REQUEST with no key", done => {
+      chai
+        .request(app)
+        .post("/phone")
+        .send({ key: 1 })
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          done();
+        });
+    });
+
     it("should allow to add the same", done => {
       chai
         .request(app)
@@ -156,7 +178,10 @@ describe("API", () => {
       [0, 200, 0],
       [4, 200, 600],
       [8, 200, 1200],
-      [9, 400, undefined]
+      [9, 400, undefined],
+      ["hello world", 400, undefined],
+      [true, 400, undefined],
+      [{ amount: 4 }, 400, undefined]
     ];
 
     givenAsync(PhoneLineData).test(

@@ -49,7 +49,7 @@ class Purchase {
       }
     }
 
-    return null;
+    return undefined;
   }
 
   cart() {

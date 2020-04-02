@@ -1,9 +1,9 @@
-const assert = require("assert");
 const given = require("mocha-testdata");
 const chai = require("chai");
+
 const Purchase = require("../purchase");
 
-const { expect } = chai;
+const { expect, assert } = chai;
 
 describe("Purchase tests", () => {
   describe("Internet connection", () => {
@@ -14,22 +14,21 @@ describe("Purchase tests", () => {
       done();
     });
 
-    it("should enable interneted connection", done => {
-      purchase.addInternetConnection();
+    it("Should enable interneted connection", () => {
+      let result = purchase.addInternetConnection();
       expect(purchase.internetConnection).to.be.true;
-      done();
+      expect(result).to.be.undefined;
     });
 
-    it("Should reflect on price", done => {
+    it("Should reflect on price", () => {
       expect(purchase.totalPrice()).to.be.equal(200);
-      done();
     });
 
-    it("should remove internet connection", done => {
-      purchase.removeInternetConnection();
+    it("Should remove internet connection", () => {
+      let result = purchase.removeInternetConnection();
       expect(purchase.internetConnection).to.be.false;
       expect(purchase.totalPrice()).to.be.equal(0);
-      done();
+      expect(result).to.be.undefined;
     });
   });
 
@@ -88,6 +87,41 @@ describe("Purchase tests", () => {
 
   describe("Phones", () => {
     let purchase;
+
+    beforeEach(done => {
+      purchase = new Purchase();
+      done();
+    });
+
+    it("Should return the added phone", () => {
+      let phone = purchase.addPhone("iphone");
+
+      expect(phone).to.be.not.undefined;
+      expect(phone.id).to.be.equal("iphone");
+    });
+
+    it("Should return the removed phone", () => {
+      purchase.addPhone("iphone");
+      purchase.addPhone("moto");
+
+      let phone = purchase.removePhone("iphone");
+
+      expect(purchase.phones.length).to.be.equal(1);
+      expect(phone).to.be.not.undefined;
+      expect(phone.id).to.be.equal("iphone");
+    });
+
+    it("Should return undefined for adding wrong phone id", () => {
+      let phone = purchase.addPhone("xyz");
+
+      expect(phone).to.be.undefined;
+    });
+
+    it("Should return undefined for removing wrong phone id", () => {
+      let phone = purchase.removePhone("xyz");
+
+      expect(phone).to.be.undefined;
+    });
 
     given(
       {
@@ -153,14 +187,15 @@ describe("Purchase tests", () => {
         expectedPrice: 0,
         expectedLength: 0
       }
-    ).it("passes if total price matches", value => {
-      purchase = new Purchase();
+    ).test("passes if total price matches", value => {
       value.phonesToAdd.forEach(phone => {
         purchase.addPhone(phone);
       });
+
       value.phonesToRemove.forEach(phone => {
         purchase.removePhone(phone);
       });
+
       for (let index = 0; index < value.expectedPhoneNames.length; index++) {
         expect(purchase.phones[index].name, "names").to.be.equal(
           value.expectedPhoneNames[index]
@@ -175,7 +210,7 @@ describe("Purchase tests", () => {
     });
   });
 
-  describe("Cart", done => {
+  describe("Cart", () => {
     let purchase;
 
     before(done => {
@@ -184,11 +219,18 @@ describe("Purchase tests", () => {
       done();
     });
 
-    it("Should reflect on the order and its price", done => {
-      console.log(purchase.getTotalCartInfo());
+    it("Should reflect on the order and its price", () => {
       expect(purchase.cart()).to.not.be.empty;
       expect(purchase.totalPrice()).to.be.equal(200);
-      done();
+    });
+
+    it("Should reflect in total cart info", () => {
+      let info = purchase.getTotalCartInfo();
+      expect(info.cart).to.be.not.empty;
+    });
+
+    it("Total price should be a number", () => {
+      assert.isNumber(purchase.totalPrice());
     });
   });
 });
