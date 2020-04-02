@@ -32,42 +32,56 @@ describe("Purchase tests", () => {
     });
   });
 
-  describe("Phone lines", () => {
+  describe("Test phone lines", () => {
     let purchase;
 
-    beforeEach(done => {
+    given(
+      {
+        linesToAdd: 1,
+        linesToDelete: 0,
+        expectedNumberOfLines: 1,
+        expectedPrice: 150
+      },
+      {
+        linesToAdd: 2,
+        linesToDelete: 1,
+        expectedNumberOfLines: 1,
+        expectedPrice: 150
+      },
+      {
+        linesToAdd: 0,
+        linesToDelete: 1,
+        expectedNumberOfLines: 0,
+        expectedPrice: 0
+      },
+      {
+        linesToAdd: 9,
+        linesToDelete: 0,
+        //max number of phone lines = 8
+        expectedNumberOfLines: 8,
+        expectedPrice: 1200
+      },
+      {
+        linesToAdd: 8,
+        linesToDelete: 0,
+        expectedNumberOfLines: 8,
+        expectedPrice: 1200
+      }
+    ).it("passes when total price matches", value => {
       purchase = new Purchase();
-      done();
-    });
 
-    it("Should not go below 0", () => {
-      purchase.deletePhoneLine();
-      expect(purchase.phoneLines.length).to.be.equal(0);
-    });
-
-    it("Should add a new phone line", () => {
-      var currentLines = purchase.phoneLines.length;
-      purchase.addPhoneLine();
-      expect(purchase.phoneLines.length).to.be.not.equal(currentLines);
-      expect(purchase.totalPrice()).to.be.equal(150);
-    });
-
-    it("Should delete a phone line", () => {
-      purchase.deletePhoneLine();
-      expect(purchase.phoneLines).to.be.empty;
-      currentLines = purchase.phoneLines.length;
-      purchase.deletePhoneLine();
-      expect(purchase.phoneLines.length).to.be.equal(0);
-      expect(purchase.totalPrice()).to.be.equal(0);
-    });
-
-    it("Should not exceed 8 phonelines", () => {
-      for (let i = 0; i < 10; i++) {
-        // Iterate 10 times
+      for (let index = 0; index < value.linesToAdd; index++) {
         purchase.addPhoneLine();
       }
-
-      expect(purchase.phoneLines.length).to.be.equal(8);
+      for (index = 0; index < value.linesToDelete; index++) {
+        purchase.deletePhoneLine();
+      }
+      expect(purchase.totalPrice(), "total price").to.be.equal(
+        value.expectedPrice
+      );
+      expect(purchase.phoneLines.length, "number of lines").to.be.equal(
+        value.expectedNumberOfLines
+      );
     });
   });
 
