@@ -38,4 +38,4 @@ Multiple units of the same cell phone models can be added.
 
 ![alt text](./boundaries.jpg "Boundaries")
 
-![alt text](./tests.jpg "Testing and expected results")
+![alt text](./tests.jpg "State machine diagram")
