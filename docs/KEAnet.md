@@ -36,4 +36,6 @@ Ad.3) Phone names to be included (when adding certain model total price should b
 		
 Multiple units of the same cell phone models can be added.
 
-![alt text](./abba.png "Logo Title Text 1")
+![alt text](./boundaries.jpg "Boundaries")
+
+![alt text](./tests.jpg "Testing and expected results")
