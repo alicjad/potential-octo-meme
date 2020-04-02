@@ -5,7 +5,7 @@ function listboxresults() {
   message.innerHTML = "";
   x = document.getElementById("txtCellPhones").value;
   try {
-    if (x == "") throw "item  not selected";
+    if (x == "") throw "item  not selected !!!";
   }
   catch (err) {
     message.innerHTML = "Alert " + err;
