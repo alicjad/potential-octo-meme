@@ -33,30 +33,56 @@ describe("Purchase tests", () => {
     });
   });
 
-  describe("Phone lines", () => {
+  describe("Test phone lines", () => {
     let purchase;
 
-    beforeEach(done => {
+    given(
+      {
+        linesToAdd: 1,
+        linesToDelete: 0,
+        expectedNumberOfLines: 1,
+        expectedPrice: 150
+      },
+      {
+        linesToAdd: 2,
+        linesToDelete: 1,
+        expectedNumberOfLines: 1,
+        expectedPrice: 150
+      },
+      {
+        linesToAdd: 0,
+        linesToDelete: 1,
+        expectedNumberOfLines: 0,
+        expectedPrice: 0
+      },
+      {
+        linesToAdd: 9,
+        linesToDelete: 0,
+        //max number of phone lines = 8
+        expectedNumberOfLines: 8,
+        expectedPrice: 1200
+      },
+      {
+        linesToAdd: 8,
+        linesToDelete: 0,
+        expectedNumberOfLines: 8,
+        expectedPrice: 1200
+      }
+    ).it("passes when total price matches", value => {
       purchase = new Purchase();
-      done();
-    });
 
-    it("Should add a new phone line", done => {
-      var currentLines = purchase.phoneLines.length;
-      purchase.addPhoneLine();
-      expect(purchase.phoneLines.length).to.be.not.equal(currentLines);
-      expect(purchase.totalPrice()).to.be.equal(150);
-      done();
-    });
-
-    it("Should delete a phone line", done => {
-      purchase.deletePhoneLine();
-      expect(purchase.phoneLines).to.be.empty;
-      currentLines = purchase.phoneLines.length;
-      purchase.deletePhoneLine();
-      expect(purchase.phoneLines.length).to.be.equal(0);
-      expect(purchase.totalPrice()).to.be.equal(0);
-      done();
+      for (let index = 0; index < value.linesToAdd; index++) {
+        purchase.addPhoneLine();
+      }
+      for (index = 0; index < value.linesToDelete; index++) {
+        purchase.deletePhoneLine();
+      }
+      expect(purchase.totalPrice(), "total price").to.be.equal(
+        value.expectedPrice
+      );
+      expect(purchase.phoneLines.length, "number of lines").to.be.equal(
+        value.expectedNumberOfLines
+      );
     });
   });
 
